@@ -1,0 +1,8 @@
+{
+  "name": "Altair. Matemáticas Rápidas.",
+  "description": "Calculadora de cálculo mental con pizarra interactiva y desglose paso a paso de suma, resta, multiplicación y división.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

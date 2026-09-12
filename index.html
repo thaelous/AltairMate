@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Altair. Matemáticas Rápidas.</title>
+    <meta name="description" content="Calculadora de cálculo mental con pizarra interactiva y desglose paso a paso de operaciones." />
+    <meta property="og:title" content="Altair. Matemáticas Rápidas." />
+    <meta property="og:description" content="Calculadora de cálculo mental con pizarra interactiva y desglose paso a paso de operaciones." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Main Container -->
+    <div id="app">
+      <!-- Header -->
+      <header class="app-header" id="main-header">
+        <div class="header-brand" id="header-brand">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="46" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+            <path d="M50 8 L54 42 L88 46 L54 50 L50 84 L46 50 L12 46 L46 42 Z" fill="#ffffff" filter="drop-shadow(0 0 6px #38bdf8)"/>
+            <path d="M50 24 L52 46 L74 48 L52 50 L50 72 L48 50 L26 48 L48 46 Z" fill="#67e8f9"/>
+            <circle cx="50" cy="48" r="4" fill="#ffffff"/>
+          </svg>
+          <div class="header-title" id="header-title-text">
+            <span class="title-altair">Altair.</span>
+            <span class="title-sub">Matemáticas Rápidas.</span>
+          </div>
+        </div>
+
+        <div class="header-actions" id="header-actions">
+          <button class="btn-icon" id="btn-open-help" title="Ver guía pedagógica de métodos mentales">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span class="font-ui">Guía</span>
+          </button>
+          <button class="btn-icon active" id="btn-sound-toggle" title="Silenciar sonidos de tiza">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+          </button>
+          <button class="btn-icon btn-danger" id="btn-clear-all" title="Borrar toda la pizarra">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Body -->
+      <main class="app-main" id="main-content">
+        <!-- Blackboard Section -->
+        <section class="board-section keypad-mode" id="board-section">
+          <div class="chalk-board wood-frame" id="chalk-board-slate">
+            <div class="chalk-board-noise"></div>
+
+            <!-- Blackboard Top Bar -->
+            <div class="board-top-bar" id="board-top-bar">
+              <div class="board-method-indicator">
+                <span class="pulse-dot"></span>
+                <span class="board-method-text font-ui" id="board-method-text">Pizarra de Desglose Mental</span>
+              </div>
+              <div class="board-controls" id="board-controls" style="display: none;">
+                <button class="btn-step" id="btn-replay-steps" title="Repetir animación paso a paso">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                  <span>Repetir</span>
+                </button>
+                <button class="btn-step btn-step-emerald" id="btn-next-step" title="Ver siguiente paso">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  <span>Paso</span>
+                </button>
+                <button class="btn-step btn-step-cyan" id="btn-show-all" title="Mostrar todos los pasos">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 19 22 12 13 5 13 19"></polygon><polygon points="2 19 11 12 2 5 2 19"></polygon></svg>
+                  <span>Todo</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Blackboard Canvas Inner -->
+            <div class="board-canvas" id="board-canvas">
+              <!-- Left Column: Current Equation -->
+              <div class="equation-column" id="equation-column">
+                <div class="equation-display chalk-text" id="equation-text">0</div>
+                <div class="equation-divider"></div>
+                <div class="equation-subtitle font-ui" id="equation-subtitle">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#67e8f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <span>INGRESA NÚMEROS Y OPERACIÓN</span>
+                </div>
+              </div>
+
+              <!-- Right Column: Step by step decomposition -->
+              <div class="steps-column chalk-scrollbar" id="steps-container">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Blackboard Bottom Tray -->
+            <div class="board-tray" id="board-tray">
+              <div class="tray-chalks">
+                <span class="tray-label">Tiza:</span>
+                <button class="chalk-stick white active" data-color="white" title="Tiza Blanca"></button>
+                <button class="chalk-stick yellow" data-color="yellow" title="Tiza Amarilla"></button>
+                <button class="chalk-stick cyan" data-color="cyan" title="Tiza Celeste"></button>
+                <button class="chalk-stick pink" data-color="pink" title="Tiza Rosada"></button>
+              </div>
+              <button class="eraser-btn" id="btn-board-eraser" title="Limpiar pizarra">
+                <div class="eraser-icon-box"></div>
+                <span>Borrador</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Minimized Bar (Visible when result is showing) -->
+        <div class="minimized-bar" id="minimized-bar" style="display: none;">
+          <button class="btn-minimized btn-teclado" id="btn-open-keypad" title="Abrir teclado de la calculadora">
+            Teclado
+          </button>
+          <span class="minimized-center-text">Pizarra Ampliada</span>
+          <button class="btn-minimized btn-nueva-op" id="btn-nueva-operacion" title="Nueva operación / Borrar pizarra">
+            Nueva Operación
+          </button>
+        </div>
+
+        <!-- Full Keypad Panel (Visible when typing) -->
+        <section class="keypad-section" id="keypad-section">
+          <!-- 4x5 Keypad Grid -->
+          <div class="keypad-grid" id="keypad-grid">
+            <!-- Row 1: C, Backspace, ÷, × -->
+            <button class="key-button btn-clear" id="btn-clear" title="Borrar todo">
+              <span>C</span>
+              <span class="label-sub">Borrar</span>
+            </button>
+            <button class="key-button btn-backspace" id="btn-backspace" title="Regresar un espacio">
+              <span>⌫</span>
+              <span class="label-sub">Retroceder</span>
+            </button>
+            <button class="key-button btn-op" data-op="÷" title="Dividir">÷</button>
+            <button class="key-button btn-op" data-op="×" title="Multiplicar">×</button>
+
+            <!-- Row 2: 7, 8, 9, - -->
+            <button class="key-button" data-digit="7">7</button>
+            <button class="key-button" data-digit="8">8</button>
+            <button class="key-button" data-digit="9">9</button>
+            <button class="key-button btn-op" data-op="-" title="Restar">−</button>
+
+            <!-- Row 3: 4, 5, 6, + -->
+            <button class="key-button" data-digit="4">4</button>
+            <button class="key-button" data-digit="5">5</button>
+            <button class="key-button" data-digit="6">6</button>
+            <button class="key-button btn-op" data-op="+" title="Sumar">+</button>
+
+            <!-- Row 4: 1, 2, 3, 0 -->
+            <button class="key-button" data-digit="1">1</button>
+            <button class="key-button" data-digit="2">2</button>
+            <button class="key-button" data-digit="3">3</button>
+            <button class="key-button" data-digit="0">0</button>
+
+            <!-- Row 5: Equals = (Full row) -->
+            <button class="key-button btn-equals" id="btn-equals" title="Calcular y desglosar paso a paso">
+              <span class="label-main">= DESGLOSAR OPERACIÓN</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+
+          <!-- Presets Bar -->
+          <div class="presets-bar" id="presets-bar">
+            <span class="preset-label">Ejemplos:</span>
+            <button class="btn-preset" data-a="54" data-op="+" data-b="36">54 + 36</button>
+            <button class="btn-preset" data-a="350" data-op="-" data-b="157">350 − 157</button>
+            <button class="btn-preset preset-mult" data-a="48" data-op="×" data-b="6">48 × 6</button>
+            <button class="btn-preset preset-mult" data-a="24" data-op="×" data-b="15">24 × 15</button>
+            <button class="btn-preset preset-div" data-a="144" data-op="÷" data-b="6">144 ÷ 6</button>
+            <button class="btn-preset preset-div" data-a="485" data-op="÷" data-b="5">485 ÷ 5</button>
+          </div>
+
+          <!-- Keypad Footer -->
+          <div class="keypad-footer" id="keypad-footer">
+            <span class="altair-tag">Altair · Cálculo Mental</span>
+            <span>Usa números del teclado o haz clic</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Pedagogy Modal -->
+    <div class="modal-overlay" id="pedagogy-modal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>Métodos Mentales en <span class="altair-word">Altair</span></span>
+          </div>
+          <button class="btn-close-modal" id="btn-close-modal" title="Cerrar ventana">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="modal-body chalk-scrollbar">
+          <div class="modal-intro">
+            <p>Altair entrena tu mente descomponiendo las operaciones en bloques naturales, en lugar de forzarte a memorizar algoritmos rígidos de lápiz y papel.</p>
+          </div>
+
+          <!-- Suma -->
+          <div class="method-item">
+            <div class="method-badge-row">
+              <span class="op-badge add">Suma (+)</span>
+              <span class="method-title">Descomposición Posicional</span>
+            </div>
+            <p class="method-desc">Suma de izquierda a derecha: primero centenas, luego decenas y al final unidades. Así retenemos menos números intermedios.</p>
+            <div class="method-chalk-box chalk-text">
+              <div style="color: #67e8f9;">54 + 36 ➔</div>
+              <div>(50 + 30 = 80) + (4 + 6 = 10) = <span style="color: #fef08a;">90</span></div>
+            </div>
+          </div>
+
+          <!-- Resta -->
+          <div class="method-item">
+            <div class="method-badge-row">
+              <span class="op-badge sub">Resta (−)</span>
+              <span class="method-title">Método del Salto / Complemento</span>
+            </div>
+            <p class="method-desc">En vez de "pedir prestado", sube desde el sustraendo hasta el minuendo dando saltos a números redondos (decenas o centenas).</p>
+            <div class="method-chalk-box chalk-text">
+              <div style="color: #67e8f9;">350 − 157 ➔</div>
+              <div>157 + 3 = 160 | 160 + 40 = 200 | 200 + 150 = 350</div>
+              <div>Total saltos: 150 + 40 + 3 = <span style="color: #fef08a;">193</span></div>
+            </div>
+          </div>
+
+          <!-- Multiplicación -->
+          <div class="method-item">
+            <div class="method-badge-row">
+              <span class="op-badge mult">Multiplicación (×)</span>
+              <span class="method-title">Descomposición Distributiva</span>
+            </div>
+            <p class="method-desc">Descompón el factor más grande en múltiplos de 10 y unidades para realizar multiplicaciones parciales sencillas.</p>
+            <div class="method-chalk-box chalk-text">
+              <div style="color: #67e8f9;">48 × 6 ➔</div>
+              <div>(40 × 6 = 240) + (8 × 6 = 48) = <span style="color: #fef08a;">288</span></div>
+            </div>
+          </div>
+
+          <!-- División -->
+          <div class="method-item">
+            <div class="method-badge-row">
+              <span class="op-badge div">División (÷)</span>
+              <span class="method-title">Cocientes Parciales Amigables</span>
+            </div>
+            <p class="method-desc">Reparte el dividendo extrayendo múltiplos evidentes del divisor (como 100×, 10× o 5×) hasta agotar la cantidad.</p>
+            <div class="method-chalk-box chalk-text">
+              <div style="color: #67e8f9;">144 ÷ 6 ➔</div>
+              <div>(120 ÷ 6 = 20) + (24 ÷ 6 = 4) ➔ Cociente: <span style="color: #fef08a;">24</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-modal-done font-ui" id="btn-modal-done">¡Entendido!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Splash Screen (Altair Constelación del Águila) -->
+    <div class="splash-overlay" id="splash-screen">
+      <!-- Twinkling Starfields -->
+      <div class="splash-starfield-1"></div>
+      <div class="splash-starfield-2"></div>
+      <div class="splash-nebula-cyan"></div>
+      <div class="splash-nebula-blue"></div>
+
+      <!-- SVG Aquila Constellation -->
+      <svg class="splash-constellation-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="altairGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="30%" stop-color="#7dd3fc" stop-opacity="0.85" />
+            <stop offset="60%" stop-color="#0284c7" stop-opacity="0.4" />
+            <stop offset="100%" stop-color="#0369a1" stop-opacity="0" />
+          </radialGradient>
+          <filter id="starBloom" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Constellation Lines (Aquila) -->
+        <g stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.45">
+          <line x1="450" y1="270" x2="500" y2="320" />
+          <line x1="500" y1="320" x2="550" y2="370" />
+          <line x1="500" y1="320" x2="490" y2="480" />
+          <line x1="490" y1="480" x2="470" y2="680" />
+          <line x1="500" y1="320" x2="350" y2="330" />
+          <line x1="350" y1="330" x2="270" y2="360" />
+          <line x1="270" y1="360" x2="210" y2="400" />
+          <line x1="500" y1="320" x2="640" y2="420" />
+          <line x1="640" y1="420" x2="730" y2="460" />
+          <line x1="490" y1="480" x2="640" y2="420" />
+          <line x1="490" y1="480" x2="350" y2="330" />
+        </g>
+
+        <!-- Stars -->
+        <circle cx="450" cy="270" r="5.5" fill="#fef08a" opacity="0.9" />
+        <circle cx="550" cy="370" r="5" fill="#fef08a" opacity="0.9" />
+        <circle cx="270" cy="360" r="4.5" fill="#e0f2fe" opacity="0.8" />
+        <circle cx="210" cy="400" r="4" fill="#e0f2fe" opacity="0.8" />
+        <circle cx="490" cy="480" r="5" fill="#e0f2fe" opacity="0.85" />
+        <circle cx="730" cy="460" r="4.5" fill="#e0f2fe" opacity="0.8" />
+        <circle cx="470" cy="680" r="4.5" fill="#e0f2fe" opacity="0.8" />
+
+        <!-- Main Star: Altair -->
+        <circle cx="500" cy="320" r="55" fill="url(#altairGlow)" />
+        <line x1="500" y1="210" x2="500" y2="430" stroke="#ffffff" stroke-width="2.5" opacity="0.9" filter="url(#starBloom)" />
+        <line x1="390" y1="320" x2="610" y2="320" stroke="#ffffff" stroke-width="2.5" opacity="0.9" filter="url(#starBloom)" />
+        <line x1="435" y1="255" x2="565" y2="385" stroke="#7dd3fc" stroke-width="1.2" opacity="0.7" />
+        <line x1="435" y1="385" x2="565" y2="255" stroke="#7dd3fc" stroke-width="1.2" opacity="0.7" />
+        <circle cx="500" cy="320" r="10" fill="#ffffff" filter="url(#starBloom)" />
+        <circle cx="500" cy="320" r="6" fill="#ffffff" />
+      </svg>
+
+      <!-- Floating Math Numbers & Signs -->
+      <div class="splash-floating-item" style="left: 12%; top: 22%; font-size: 32px; color: #93c5fd; opacity: 0.35; animation: floatDrift 9s ease-in-out infinite alternate;">7</div>
+      <div class="splash-floating-item" style="left: 82%; top: 28%; font-size: 28px; color: #67e8f9; opacity: 0.38; animation: floatDrift 11s ease-in-out 1s infinite alternate;">+</div>
+      <div class="splash-floating-item" style="left: 18%; top: 72%; font-size: 36px; color: #fef08a; opacity: 0.32; animation: floatDrift 10s ease-in-out 2s infinite alternate;">×</div>
+      <div class="splash-floating-item" style="left: 78%; top: 70%; font-size: 30px; color: #fbcfe8; opacity: 0.36; animation: floatDrift 8s ease-in-out 0.5s infinite alternate;">÷</div>
+      <div class="splash-floating-item" style="left: 30%; top: 15%; font-size: 26px; color: #a7f3d0; opacity: 0.3; animation: floatDrift 12s ease-in-out 3s infinite alternate;">9</div>
+      <div class="splash-floating-item" style="left: 68%; top: 18%; font-size: 34px; color: #ffffff; opacity: 0.35; animation: floatDrift 9.5s ease-in-out 1.5s infinite alternate;">4</div>
+      <div class="splash-floating-item" style="left: 10%; top: 48%; font-size: 30px; color: #cbd5e1; opacity: 0.28; animation: floatDrift 10.5s ease-in-out 2.5s infinite alternate;">−</div>
+      <div class="splash-floating-item" style="left: 88%; top: 46%; font-size: 32px; color: #38bdf8; opacity: 0.35; animation: floatDrift 8.5s ease-in-out 1.2s infinite alternate;">8</div>
+      <div class="splash-floating-item" style="left: 38%; top: 82%; font-size: 28px; color: #93c5fd; opacity: 0.3; animation: floatDrift 11.5s ease-in-out 0.8s infinite alternate;">2</div>
+      <div class="splash-floating-item" style="left: 62%; top: 84%; font-size: 32px; color: #fef08a; opacity: 0.32; animation: floatDrift 9s ease-in-out 2.2s infinite alternate;">5</div>
+
+      <!-- Central Hero Branding -->
+      <div class="splash-center">
+        <!-- Radiant Star Icon -->
+        <div class="splash-icon-wrapper">
+          <svg width="88" height="88" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="46" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6"/>
+            <circle cx="50" cy="50" r="34" stroke="#7dd3fc" stroke-width="1" opacity="0.4"/>
+            <path d="M50 4 L55 38 L88 43 L55 48 L50 82 L45 48 L12 43 L45 38 Z" fill="#ffffff" filter="drop-shadow(0 0 14px #38bdf8)"/>
+            <path d="M50 20 L53 43 L76 46 L53 49 L50 72 L47 49 L24 46 L47 43 Z" fill="#67e8f9"/>
+            <path d="M50 32 L51 46 L64 47 L51 48 L50 62 L49 48 L36 47 L49 46 Z" fill="#ffffff"/>
+            <circle cx="50" cy="46" r="4" fill="#ffffff"/>
+          </svg>
+        </div>
+
+        <!-- Title 1: Altair. with author credit -->
+        <div class="splash-title-block">
+          <h1 class="splash-main-title font-ui">Altair.</h1>
+          <span class="splash-author font-editorial">por Robert Pacheco</span>
+        </div>
+
+        <!-- Title 2: Matemáticas rápidas. -->
+        <p class="splash-subtitle font-ui">Matemáticas rápidas.</p>
+      </div>
+    </div>
+
+    <!-- Script (Vanilla Web Standard) -->
+    <script src="./app.js"></script>
+  </body>
+</html>
