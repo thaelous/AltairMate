@@ -219,7 +219,7 @@ export default function App() {
       />
 
       {/* Startup Altair Constellation Splash Screen */}
-      <SplashScreen />
+      {/* <SplashScreen /> */}
     </div>
   );
 }
