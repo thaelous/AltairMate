@@ -19,6 +19,7 @@ interface FloatingElement {
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
+  return null;
   const [visible, setVisible] = useState<boolean>(true);
   const [fading, setFading] = useState<boolean>(false);
 
